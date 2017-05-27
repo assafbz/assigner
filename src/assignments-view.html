@@ -14,24 +14,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/iron-meta/iron-meta.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="competitions-view">
+<dom-module id="assignments-view">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
-      }
-
-      iron-list {
-        flex: 1 1 auto;
       }
 
       paper-card {
         margin-top: 10px;
         padding: 5px;
+        width: 100%;
+      }
+
+      paper-fab {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
       }
 
 
@@ -40,37 +44,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-location route="{{route}}"></app-location>
 
     <firebase-query
-            app-name="betty-firebase"
-            path="/competitions"
-            data="{{competitions}}">
+            app-name="assigner-firebase"
+            path="/assignments"
+            data="{{assignments}}">
     </firebase-query>
 
-    <iron-meta key="selectedCompetition" value="{{selectedCompetition}}"></iron-meta>
-
-    <template is="dom-repeat" items="{{competitions}}" as="competition">
-      <paper-card heading="{{competition.name}}" image="http://seo-takeover.com/wp-content/uploads/2013/09/competition.png" on-click="selectCompetition">
-        <div class="card-content">{{competition.startDate}}</div>
+    <template is="dom-repeat" items="{{assignments}}" as="assignment">
+      <paper-card heading="{{assignment.name}}" image="http://www.remasschools.edu.eg/wp-content/uploads/2015/10/assignment_icon.jpg" on-click="selectAssignment">
+        <div class="card-content">
+          Some Content
+        </div>
+        <div class="card-actions">
+          <paper-button>Some action</paper-button>
+        </div>
       </paper-card>
     </template>
+
+    <paper-fab icon="add" on-click="addAssignment"></paper-fab>
+
   </template>
 
   <script>
-    class Competitions extends Polymer.Element {
-      static get is() { return 'competitions-view'; }
+    class Assignments extends Polymer.Element {
+      static get is() { return 'assignments-view'; }
 
-      static get properties() {
-          return {
-            selectedCompetition: Object
-          }
+      selectAssignment(event) {
+          this.set('route.path', '/assignment/' + event.model.__data.assignment.$key);
       }
 
-
-      selectCompetition(event) {
-          this.selectedCompetition = event.model.__data.competition;
-          this.set('route.path', '/games/' + this.selectedCompetition.$key);
-      }
+        addAssignment(event) {
+            this.set('route.path', '/assignment');
+        }
     }
 
-    window.customElements.define(Competitions.is, Competitions);
+    window.customElements.define(Assignments.is, Assignments);
   </script>
 </dom-module>

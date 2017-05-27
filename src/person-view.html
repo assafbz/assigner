@@ -1,0 +1,57 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="person-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+        paper-button {
+            margin-top: 20px;
+        }
+
+    </style>
+
+      <app-location route="{{app_route}}"></app-location>
+
+      <app-route
+            route="{{route}}"
+            pattern="/:personId"
+            data="{{routeData}}"></app-route>
+
+    <firebase-document
+            id="fbDoc"
+            app-name="assigner-firebase"
+            path="/personnel/{{routeData.personId}}"
+            data="{{personData}}">
+    </firebase-document>
+
+    <paper-input label="Person Name" type="text" value="{{personData.name}}"></paper-input>
+
+    <paper-button raised disabled$="{{invalid}}" on-click="save">Save</paper-button>
+
+  </template>
+
+  <script>
+    class Person extends Polymer.Element {
+      static get is() { return 'person-view'; }
+
+      save(event){
+          if (this.routeData.personId == undefined) {
+              this.$.fbDoc.db.ref('/personnel').push(this.personData);
+          }
+          this.set('app_route.path', '/personnel');
+      }
+    }
+
+    window.customElements.define(Person.is, Person);
+  </script>
+</dom-module>

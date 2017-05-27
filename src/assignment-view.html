@@ -1,0 +1,61 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="assignment-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+        paper-button {
+            margin-top: 20px;
+        }
+
+    </style>
+
+      <app-location route="{{app_route}}"></app-location>
+
+      <app-route
+            route="{{route}}"
+            pattern="/:assignmentId"
+            data="{{routeData}}"></app-route>
+
+    <firebase-document
+            id="fbDoc"
+            app-name="assigner-firebase"
+            path="/assignments/{{routeData.assignmentId}}"
+            data="{{assignmentData}}">
+    </firebase-document>
+
+    <paper-input label="Assignment Name" type="text" value="{{assignmentData.name}}"></paper-input>
+
+    <paper-input label="Assignment Location" type="text" value="{{assignmentData.location}}"></paper-input>
+
+    <paper-input label="Number Of Personnel" type="number" min="1" max="10" value="{{assignmentData.numOfPersonnel }}" invalid="{{invalid}}" auto-validate error-message="Must be between 1 to 10"></paper-input>
+
+    <paper-button raised disabled$="{{invalid}}" on-click="save">Save</paper-button>
+
+  </template>
+
+  <script>
+    class Assignment extends Polymer.Element {
+      static get is() { return 'assignment-view'; }
+
+      save(event){
+          if (this.routeData.assignmentId == undefined) {
+              this.$.fbDoc.db.ref('/assignments').push(this.assignmentData);
+          }
+          this.set('app_route.path', '/assignments');
+      }
+    }
+
+    window.customElements.define(Assignment.is, Assignment);
+  </script>
+</dom-module>

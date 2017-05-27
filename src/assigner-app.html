@@ -1,13 +1,3 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
@@ -22,23 +12,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
-<link rel="import" href="betty-icons.html">
+<link rel="import" href="assigner-icons.html">
 
 <link rel="lazy-import" href="competitions-view.html">
 <link rel="lazy-import" href="games-view.html">
 <link rel="lazy-import" href="notfound404-view.html">
+<link rel="lazy-import" href="assignment-view.html">
+<link rel="lazy-import" href="personnel-view.html">
+<link rel="lazy-import" href="person-view.html">
 
-<dom-module id="betty-app">
+<dom-module id="assigner-app">
   <template>
     <firebase-app
-            name="betty-firebase"
-            api-key="AIzaSyAcQDnKlhKAbQcgU_-HhFVBEj1F5MMQ9IY"
-            auth-domain="betty.firebaseapp.com"
-            database-url="https://betty.firebaseio.com">
+            name="assigner-firebase"
+            api-key="AIzaSyDlLIyYTmyUtv87iYq3bysiWHuXqPRFJFo"
+            auth-domain="assigner-a3261.firebaseapp.com"
+            database-url="https://assigner-a3261.firebaseio.com">
     </firebase-app>
     <firebase-auth
             id="auth"
-            app-name="betty-firebase"
+            app-name="assigner-firebase"
             provider="google">
     </firebase-auth>
     <style>
@@ -83,17 +76,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-location route="{{route}}"></app-location>
     <app-route
         route="{{route}}"
-        pattern="[[rootPattern]]:page"
+        pattern="/:page"
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer">
-        <app-toolbar>Let's Bet</app-toolbar>
+        <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="competitions" href="competitions">Competitions</a>
-          <a name="games" href="games">Games</a>
+          <a name="assignments" href="assignments">Assignments</a>
+          <a name="personnel" href="personnel">Personnel</a>
         </iron-selector>
       </app-drawer>
 
@@ -102,8 +95,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="betty-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Betty</div>
+            <paper-icon-button icon="assigner-icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>Assigner</div>
           </app-toolbar>
         </app-header>
 
@@ -112,18 +105,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <competitions-view name="competitions"></competitions-view>
-          <games-view name="games" route="{{subroute}}"></games-view>
+          <assignments-view name="assignments"></assignments-view>
           <notfound404-view name="view404"></notfound404-view>
+          <assignment-view name="assignment" route="{{subroute}}"></assignment-view>
+          <personnel-view name="personnel"></personnel-view>
+          <person-view name="person" route="{{subroute}}"></person-view>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
   </template>
 
   <script>
-    class BettyApp extends Polymer.Element {
+    class AssignerApp extends Polymer.Element {
 
-      static get is() { return 'betty-app'; }
+      static get is() { return 'assigner-app'; }
 
       static get properties() {
         return {
@@ -161,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'view1' in that case.
-        this.page = page || 'competitions';
+        this.page = page || 'assignments';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -184,6 +179,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
 
-    window.customElements.define(BettyApp.is, BettyApp);
+    window.customElements.define(AssignerApp.is, AssignerApp);
   </script>
 </dom-module>
